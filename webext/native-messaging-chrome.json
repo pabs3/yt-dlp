@@ -1,0 +1,8 @@
+{
+  "name": "yt-dlp browser integration",
+  "description": "Provides yt-dlp functionality to browsers.",
+  "path": "/usr/bin/yt-dlp-webext-native-messaging",
+  "type": "stdio",
+  "allowed_origins": [
+  ]
+}

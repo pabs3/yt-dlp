@@ -1,0 +1,47 @@
+#!/usr/bin/env python3
+import sys
+import yt_dlp
+
+# FIXME: redirect logging output using logger parameter
+
+debug = True
+webext_msg_max_size = 1024 * 1024
+webext_length_struct = '@I'
+
+def recv():
+    length = sys.stdin.buffer.read(4)
+    if len(length) == 0:
+        return None
+    length = struct.unpack(webext_length_struct, length)[0]
+    return json.loads(sys.stdin.buffer.read(length).decode('utf-8'))
+
+def send(data):
+    while True:
+        message, data = data[:webext_msg_max_size], data[webext_msg_max_size:]
+        message = json.dumps(message, separators=(',', ':')).encode('utf-8')
+        length = struct.pack(webext_length_struct, len(message))
+        sys.stdout.buffer.write(length)
+        sys.stdout.buffer.write(message)
+        sys.stdout.buffer.flush()
+        if not data:
+            break
+
+def recv_debug():
+    return sys.stdin.readline()
+
+def send_debug(data):
+    from pprint import pprint
+    print(type(data))
+    pprint(data)
+
+if debug:
+    recv=recv_debug
+    send=send_debug
+
+while True:
+    url = recv()
+    if not url:
+        break
+    video = yt_dlp._real_main(["--no-warnings", "-J", "--flat-playlist", "--sub-format", "ass/srt/best", url])
+    send(video)
+

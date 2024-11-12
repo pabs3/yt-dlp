@@ -1,0 +1,40 @@
+{
+  "manifest_version": 2,
+
+  "name": "yt-dlp browser integration",
+  "short_name": "yt-dlp",
+  "description": "Provides yt-dlp functionality to browsers.",
+  "version": "0",
+
+  "default_locale": "en",
+
+  "author": "yt-dlp contributors",
+
+  "permissions": [
+    "nativeMessaging",
+  ],
+
+  "applications": {
+   "gecko": {
+      "id": "yt-dlp@github.com"
+    }
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ],
+  "permissions": [
+    "nativeMessaging"
+  ]
+}
